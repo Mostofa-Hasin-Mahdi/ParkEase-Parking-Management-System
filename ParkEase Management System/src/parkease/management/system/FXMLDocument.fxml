@@ -16,7 +16,7 @@
       </ImageView>
       <TextField fx:id="nmfd" layoutX="499.0" layoutY="159.0" prefHeight="25.0" prefWidth="172.0" promptText="enter name" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
       <Button fx:id="lgnbtn" layoutX="499.0" layoutY="251.0" mnemonicParsing="false" onAction="#loginMethod" styleClass="transparent-button" stylesheets="@../../style.css" text="Login" />
-      <Button fx:id="supbtn" layoutX="590.0" layoutY="251.0" mnemonicParsing="false" onAction="#signupmethod" styleClass="transparent-button" stylesheets="@../../style.css" text="Sign up" />
+      <Button fx:id="supbtn" layoutX="590.0" layoutY="251.0" mnemonicParsing="false" onAction="#supmethod" styleClass="transparent-button" stylesheets="@../../style.css" text="Sign up" />
       <PasswordField fx:id="psfd" layoutX="498.0" layoutY="202.0" prefHeight="33.0" prefWidth="172.0" promptText="enter password" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
    </children>
 </AnchorPane>

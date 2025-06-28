@@ -50,7 +50,7 @@ public class FXMLDocumentController implements Initializable {
             
             //opening new dashboard/window/fxml file
             Stage stage = new Stage();
-             Parent root = FXMLLoader.load(getClass().getResource("FXML.fxml"));
+             Parent root = FXMLLoader.load(getClass().getResource("homepage.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
@@ -60,8 +60,14 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+
     @FXML
-    private void signupmethod(ActionEvent event) {
+    private void supmethod(ActionEvent event) throws IOException {
+             Stage stage = new Stage();
+             Parent root = FXMLLoader.load(getClass().getResource("FXML.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
     }
     
 }
