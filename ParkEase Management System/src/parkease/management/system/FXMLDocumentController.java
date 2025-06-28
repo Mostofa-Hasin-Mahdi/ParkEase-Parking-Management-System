@@ -4,13 +4,19 @@
  */
 package parkease.management.system;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  *
@@ -22,6 +28,10 @@ public class FXMLDocumentController implements Initializable {
     private Button lgnbtn;
     @FXML
     private Button supbtn;
+    @FXML
+    private TextField nmfd;
+    @FXML
+    private TextField psfd;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -29,7 +39,25 @@ public class FXMLDocumentController implements Initializable {
     }    
 
     @FXML
-    private void loginMethod(ActionEvent event) {
+    private void loginMethod(ActionEvent event) throws IOException {
+         String username = "";
+        String password = "";
+        username = nmfd.getText();
+        password = psfd.getText();
+        if(username.equalsIgnoreCase("admin") &&
+                password.equalsIgnoreCase("admin")){
+            System.out.println("Login Succesful");
+            
+            //opening new dashboard/window/fxml file
+            Stage stage = new Stage();
+             Parent root = FXMLLoader.load(getClass().getResource("FXML.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }
+        else{
+            System.out.println("Login Failed");
+        }
     }
 
     @FXML

@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="418.0" prefWidth="766.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1" fx:controller="parkease.management.system.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="418.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="parkease.management.system.FXMLDocumentController">
    <children>
       <ImageView fitHeight="437.0" fitWidth="766.0" layoutY="-7.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../log.png" />
          </image>
       </ImageView>
-      <TextField layoutX="499.0" layoutY="159.0" prefHeight="25.0" prefWidth="172.0" promptText="name" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <TextField layoutX="499.0" layoutY="196.0" prefHeight="25.0" prefWidth="172.0" promptText="password" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <TextField fx:id="nmfd" layoutX="499.0" layoutY="159.0" prefHeight="25.0" prefWidth="172.0" promptText="enter name" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
       <Button fx:id="lgnbtn" layoutX="499.0" layoutY="251.0" mnemonicParsing="false" onAction="#loginMethod" styleClass="transparent-button" stylesheets="@../../style.css" text="Login" />
       <Button fx:id="supbtn" layoutX="590.0" layoutY="251.0" mnemonicParsing="false" onAction="#signupmethod" styleClass="transparent-button" stylesheets="@../../style.css" text="Sign up" />
+      <PasswordField fx:id="psfd" layoutX="498.0" layoutY="202.0" prefHeight="33.0" prefWidth="172.0" promptText="enter password" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
    </children>
 </AnchorPane>
