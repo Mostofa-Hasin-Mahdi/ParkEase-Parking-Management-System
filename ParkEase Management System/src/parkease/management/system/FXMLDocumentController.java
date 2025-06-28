@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 /**
@@ -18,16 +19,21 @@ import javafx.scene.control.Label;
 public class FXMLDocumentController implements Initializable {
     
     @FXML
-    private Label label;
-    
+    private Button lgnbtn;
     @FXML
-    private void handleButtonAction(ActionEvent event) {
-      
-    }
+    private Button supbtn;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+
+    @FXML
+    private void loginMethod(ActionEvent event) {
+    }
+
+    @FXML
+    private void signupmethod(ActionEvent event) {
+    }
     
 }
