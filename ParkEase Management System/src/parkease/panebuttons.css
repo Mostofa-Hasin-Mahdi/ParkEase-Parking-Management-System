@@ -1,0 +1,13 @@
+.vehicle-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #ff5f5f;
+    -fx-text-fill: #ff5f5f;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 4px 10px;
+    -fx-cursor: hand;
+}
+
+.vehicle-button:hover {
+    -fx-background-color: rgba(255, 95, 95, 0.2);
+}
