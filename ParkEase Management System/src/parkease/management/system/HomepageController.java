@@ -3,6 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
 package parkease.management.system;
+import java.sql.Connection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -64,25 +69,129 @@ public class HomepageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        colID.setCellValueFactory(new PropertyValueFactory<Vehicles, Integer>("id"));
-        colType.setCellValueFactory(new PropertyValueFactory<Vehicles, String>("vtype"));
-        colNum.setCellValueFactory(new PropertyValueFactory<Vehicles, String>("vnumber"));
-        colSlot.setCellValueFactory(new PropertyValueFactory<Vehicles, String>("slot"));
-        colErT.setCellValueFactory(new PropertyValueFactory<Vehicles, String>("entime"));
-        colAt.setCellValueFactory(new PropertyValueFactory<Vehicles, String>("alltime"));
-        tableview.setItems(list);
-    }    
+         colID.setCellValueFactory(new PropertyValueFactory<>("id"));
+    colType.setCellValueFactory(new PropertyValueFactory<>("vtype"));
+    colNum.setCellValueFactory(new PropertyValueFactory<>("vnumber"));
+    colSlot.setCellValueFactory(new PropertyValueFactory<>("slot"));
+    colErT.setCellValueFactory(new PropertyValueFactory<>("entime"));
+    colAt.setCellValueFactory(new PropertyValueFactory<>("alltime"));
+
+    loadDataFromDatabase();
+    tableview.setOnMouseClicked(event -> {
+    Vehicles selected = tableview.getSelectionModel().getSelectedItem();
+    if (selected != null) {
+        tfID.setText(selected.getId());
+        tfVT.setText(selected.getVtype());
+        tfVN.setText(selected.getVnumber());
+        tfAS.setText(selected.getSlot());
+        tfET.setText(selected.getEntime());
+        tfAT.setText(selected.getAlltime());
+    }
+});
+    }
+    
+    private void loadDataFromDatabase() {
+    ObservableList<Vehicles> vehicleList = FXCollections.observableArrayList();
+    try (Connection con = DBConnect.connect();
+         var stmt = con.createStatement();
+         var rs = stmt.executeQuery("SELECT * FROM vehicles")) {
+
+        while (rs.next()) {
+            vehicleList.add(new Vehicles(
+                String.valueOf(rs.getInt("id")),
+                rs.getString("vtype"),
+                rs.getString("vnumber"),
+                rs.getString("slot"),
+                rs.getString("entime"),
+                rs.getString("alltime")
+            ));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    tableview.setItems(vehicleList);
+}
+
 
     @FXML
-    private void addActn(ActionEvent event) {
+private void addActn(ActionEvent event) {
+    try (Connection con = DBConnect.connect();
+         var stmt = con.prepareStatement(
+             "INSERT INTO vehicles (vtype, vnumber, slot, entime, alltime) VALUES (?, ?, ?, ?, ?)")) {
+
+        stmt.setString(1, tfVT.getText());
+        stmt.setString(2, tfVN.getText());
+        stmt.setString(3, tfAS.getText());
+        stmt.setString(4, tfET.getText());
+        stmt.setString(5, tfAT.getText());
+
+        stmt.executeUpdate();
+        loadDataFromDatabase(); // Refresh table
+
+        // Optional: Clear input fields
+        tfVT.clear(); tfVN.clear(); tfAS.clear(); tfET.clear(); tfAT.clear();
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
 
     @FXML
-    private void upActn(ActionEvent event) {
+private void upActn(ActionEvent event) {
+    Vehicles selected = tableview.getSelectionModel().getSelectedItem();
+
+    if (selected != null) {
+        try (Connection con = DBConnect.connect();
+             var stmt = con.prepareStatement(
+                 "UPDATE vehicles SET vtype=?, vnumber=?, slot=?, entime=?, alltime=? WHERE id=?")) {
+
+            stmt.setString(1, tfVT.getText());
+            stmt.setString(2, tfVN.getText());
+            stmt.setString(3, tfAS.getText());
+            stmt.setString(4, tfET.getText());
+            stmt.setString(5, tfAT.getText());
+            stmt.setInt(6, Integer.parseInt(selected.getId())); // ID as int
+
+            stmt.executeUpdate();
+            loadDataFromDatabase(); // refresh
+            clearFields();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+}
+    private void clearFields() {
+    tfID.clear();
+    tfVT.clear();
+    tfVN.clear();
+    tfAS.clear();
+    tfET.clear();
+    tfAT.clear();
+}
+
+
 
     @FXML
-    private void delActn(ActionEvent event) {
+private void delActn(ActionEvent event) {
+    Vehicles selected = tableview.getSelectionModel().getSelectedItem();
+
+    if (selected != null) {
+        try (Connection con = DBConnect.connect();
+             var stmt = con.prepareStatement("DELETE FROM vehicles WHERE id=?")) {
+
+            stmt.setInt(1, Integer.parseInt(selected.getId()));
+            stmt.executeUpdate();
+            loadDataFromDatabase(); // refresh
+            clearFields();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+}
+
     
 }
