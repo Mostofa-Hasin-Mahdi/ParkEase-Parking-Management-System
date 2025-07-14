@@ -7,17 +7,16 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="418.0" prefWidth="766.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1" fx:controller="parkease.management.system.signup">
+<AnchorPane id="AnchorPane" prefHeight="438.0" prefWidth="689.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="parkease.management.system.signup">
    <children>
       <ImageView fitHeight="438.0" fitWidth="799.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../reg.png" />
+            <Image url="@../../../2.png" />
          </image>
       </ImageView>
-      <TextField fx:id="regus" layoutX="304.0" layoutY="140.0" promptText="Enter Username" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <PasswordField fx:id="regps" layoutX="305.0" layoutY="179.0" promptText="Enter Password" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <Button fx:id="regsupbtn" layoutX="350.0" layoutY="259.0" mnemonicParsing="false" onAction="#regsupbtnaction" styleClass="transparent-button" stylesheets="@../../style.css" text="Signup" />
-      <TextField fx:id="regbn" layoutX="305.0" layoutY="219.0" promptText="Building Name" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <TextField fx:id="regus" layoutX="65.0" layoutY="181.0" promptText="Enter Username" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <PasswordField fx:id="regps" layoutX="258.0" layoutY="181.0" promptText="Enter Password" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <Button fx:id="regsupbtn" layoutX="310.0" layoutY="256.0" mnemonicParsing="false" onAction="#regsupbtnaction" styleClass="transparent-button" stylesheets="@../../style.css" text="Signup" />
+      <TextField fx:id="regbn" layoutX="449.0" layoutY="181.0" promptText="Building Name" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
    </children>
 </AnchorPane>

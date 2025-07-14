@@ -7,16 +7,16 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="418.0" prefWidth="766.0" styleClass="root" stylesheets="@../../login.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="parkease.management.system.FXMLDocumentController">
+<AnchorPane id="AnchorPane" prefHeight="427.0" prefWidth="692.0" styleClass="root" stylesheets="@../../login.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="parkease.management.system.FXMLDocumentController">
    <children>
       <ImageView fitHeight="433.0" fitWidth="766.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../log.png" />
+            <Image url="@../../../1.png" />
          </image>
       </ImageView>
-      <TextField fx:id="nmfd" layoutX="499.0" layoutY="159.0" prefHeight="25.0" prefWidth="172.0" promptText="enter name" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <Button fx:id="lgnbtn" layoutX="499.0" layoutY="251.0" mnemonicParsing="false" onAction="#loginMethod" styleClass="transparent-button" stylesheets="@../../style.css" text="Login" />
-      <Button fx:id="supbtn" layoutX="590.0" layoutY="251.0" mnemonicParsing="false" onAction="#supmethod" styleClass="transparent-button" stylesheets="@../../style.css" text="Sign up" />
-      <PasswordField fx:id="psfd" layoutX="498.0" layoutY="202.0" prefHeight="33.0" prefWidth="172.0" promptText="enter password" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <TextField fx:id="nmfd" layoutX="449.0" layoutY="159.0" prefHeight="31.0" prefWidth="222.0" promptText="enter name" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <Button fx:id="lgnbtn" layoutX="449.0" layoutY="251.0" mnemonicParsing="false" onAction="#loginMethod" prefHeight="36.0" prefWidth="106.0" styleClass="transparent-button" stylesheets="@../../style.css" text="Login" />
+      <Button fx:id="supbtn" layoutX="565.0" layoutY="251.0" mnemonicParsing="false" onAction="#supmethod" prefHeight="36.0" prefWidth="106.0" styleClass="transparent-button" stylesheets="@../../style.css" text="Sign up" />
+      <PasswordField fx:id="psfd" layoutX="448.0" layoutY="202.0" prefHeight="33.0" prefWidth="222.0" promptText="enter password" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
    </children>
 </AnchorPane>
