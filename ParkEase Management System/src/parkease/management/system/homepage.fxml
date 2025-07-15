@@ -4,11 +4,18 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane id="AnchorPane" prefHeight="464.0" prefWidth="802.0" stylesheets="@../../home.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="parkease.management.system.HomepageController">
    <children>
-      <TableView fx:id="tableview" layoutX="163.0" layoutY="75.0" prefHeight="375.0" prefWidth="631.0" stylesheets="@../../table.css">
+      <ImageView fitHeight="472.0" fitWidth="898.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../3.png" />
+         </image>
+      </ImageView>
+      <TableView fx:id="tableview" layoutX="9.0" layoutY="84.0" prefHeight="375.0" prefWidth="657.0" stylesheets="@../../table.css">
         <columns>
           <TableColumn fx:id="colID" prefWidth="75.0" text="ID" />
           <TableColumn fx:id="colType" prefWidth="95.0" text="Vehicle Type" />
@@ -18,14 +25,14 @@
             <TableColumn fx:id="colAt" prefWidth="115.0" text="Allocated Time" />
         </columns>
       </TableView>
-      <TextField fx:id="tfID" layoutX="9.0" layoutY="84.0" prefHeight="33.0" prefWidth="149.0" promptText="ID" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <TextField fx:id="tfVT" layoutX="9.0" layoutY="129.0" prefHeight="33.0" prefWidth="149.0" promptText="Vehicle Type" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <TextField fx:id="tfAS" layoutX="8.0" layoutY="222.0" prefHeight="33.0" prefWidth="149.0" promptText="Allocated Slot" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <TextField fx:id="tfVN" layoutX="8.0" layoutY="176.0" prefHeight="33.0" prefWidth="149.0" promptText="Vehicle Number" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <TextField fx:id="tfET" layoutX="9.0" layoutY="267.0" prefHeight="33.0" prefWidth="149.0" promptText="Entry Time" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <TextField fx:id="tfAT" layoutX="9.0" layoutY="317.0" prefHeight="33.0" prefWidth="149.0" promptText="Allocated Time" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <Button fx:id="addbtn" layoutX="8.0" layoutY="368.0" mnemonicParsing="false" onAction="#addActn" styleClass="transparent-button" stylesheets="@../../style.css" text="Add" />
-      <Button fx:id="upbtn" layoutX="9.0" layoutY="412.0" mnemonicParsing="false" onAction="#upActn" prefHeight="38.0" prefWidth="149.0" styleClass="transparent-button" stylesheets="@../../style.css" text="Update" />
-      <Button fx:id="delbtn" layoutX="83.0" layoutY="368.0" mnemonicParsing="false" onAction="#delActn" styleClass="transparent-button" stylesheets="@../../style.css" text="Delete" />
+      <TextField fx:id="tfID" layoutX="9.0" layoutY="46.0" prefHeight="38.0" prefWidth="113.0" promptText="ID" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <TextField fx:id="tfVT" layoutX="129.0" layoutY="46.0" prefHeight="38.0" prefWidth="113.0" promptText="Vehicle Type" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <TextField fx:id="tfAS" layoutX="383.0" layoutY="46.0" prefHeight="38.0" prefWidth="113.0" promptText="Allocated Slot" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <TextField fx:id="tfVN" layoutX="250.0" layoutY="46.0" prefHeight="38.0" prefWidth="126.0" promptText="Vehicle Number" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <TextField fx:id="tfET" layoutX="504.0" layoutY="46.0" prefHeight="38.0" prefWidth="95.0" promptText="Entry Time" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <TextField fx:id="tfAT" layoutX="606.0" layoutY="46.0" prefHeight="38.0" prefWidth="126.0" promptText="Allocated Time" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <Button fx:id="addbtn" layoutX="669.0" layoutY="97.0" mnemonicParsing="false" onAction="#addActn" styleClass="transparent-button" stylesheets="@../../style.css" text="Add" />
+      <Button fx:id="upbtn" layoutX="669.0" layoutY="141.0" mnemonicParsing="false" onAction="#upActn" prefHeight="38.0" prefWidth="139.0" styleClass="transparent-button" stylesheets="@../../style.css" text="Update" />
+      <Button fx:id="delbtn" layoutX="732.0" layoutY="97.0" mnemonicParsing="false" onAction="#delActn" styleClass="transparent-button" stylesheets="@../../style.css" text="Delete" />
    </children>
 </AnchorPane>
