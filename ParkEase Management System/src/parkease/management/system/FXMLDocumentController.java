@@ -3,6 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXML2.java to edit this template
  */
 package parkease.management.system;
+import java.sql.Connection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,26 +44,38 @@ public class FXMLDocumentController implements Initializable {
     }    
 
     @FXML
-    private void loginMethod(ActionEvent event) throws IOException {
-         String username = "";
-        String password = "";
-        username = nmfd.getText();
-        password = psfd.getText();
-        if(username.equalsIgnoreCase("admin") &&
-                password.equalsIgnoreCase("admin")){
-            System.out.println("Login Succesful");
-            
-            //opening new dashboard/window/fxml file
+private void loginMethod(ActionEvent event) throws IOException {
+    String username = nmfd.getText();
+    String password = psfd.getText();
+
+    try (Connection con = DBConnect.connect();
+         PreparedStatement stmt = con.prepareStatement("SELECT id FROM users WHERE username=? AND password=?")) {
+
+        stmt.setString(1, username);
+        stmt.setString(2, password);
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            int userId = rs.getInt("id");
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("homepage.fxml"));
+            Parent root = loader.load();
+
+            HomepageController controller = loader.getController();
+            controller.setLoggedInUserId(userId);
+
             Stage stage = new Stage();
-             Parent root = FXMLLoader.load(getClass().getResource("homepage.fxml"));
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            stage.setScene(new Scene(root));
             stage.show();
-        }
-        else{
+        } else {
             System.out.println("Login Failed");
         }
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
 
 
     @FXML
