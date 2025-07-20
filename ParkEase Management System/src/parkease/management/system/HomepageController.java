@@ -4,6 +4,9 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -38,6 +41,8 @@ public class HomepageController implements Initializable {
     @FXML private Button delbtn;
 
     private int loggedInUserId;
+    @FXML
+    private Button trnscbtn;
 
     // Called externally from login controller
     public void setLoggedInUserId(int id) {
@@ -94,26 +99,32 @@ public class HomepageController implements Initializable {
         tableview.setItems(vehicleList);
     }
 
-    @FXML
-    private void addActn(ActionEvent event) {
-        try (Connection con = DBConnect.connect();
-             PreparedStatement stmt = con.prepareStatement(
-                 "INSERT INTO vehicles (user_id, vtype, vnumber, slot, entime, alltime) VALUES (?, ?, ?, ?, ?, ?)")) {
+@FXML
+private void addActn(ActionEvent event) {
+    try (Connection con = DBConnect.connect();
+         PreparedStatement stmt = con.prepareStatement(
+             "INSERT INTO vehicles (user_id, vtype, vnumber, slot, entime, alltime) VALUES (?, ?, ?, ?, ?, ?)")) {
 
-            stmt.setInt(1, loggedInUserId);
-            stmt.setString(2, tfVT.getText());
-            stmt.setString(3, tfVN.getText());
-            stmt.setString(4, tfAS.getText());
-            stmt.setString(5, tfET.getText());
-            stmt.setString(6, tfAT.getText());
+        // Auto-set current timestamp for entime
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedNow = now.format(formatter);
 
-            stmt.executeUpdate();
-            loadDataFromDatabase();
-            clearFields();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        stmt.setInt(1, loggedInUserId);
+        stmt.setString(2, tfVT.getText());
+        stmt.setString(3, tfVN.getText());
+        stmt.setString(4, tfAS.getText());
+        stmt.setString(5, formattedNow); // entime set automatically
+        stmt.setString(6, tfAT.getText());
+
+        stmt.executeUpdate();
+        loadDataFromDatabase();
+        clearFields();
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
 
     @FXML
     private void upActn(ActionEvent event) {
@@ -139,26 +150,63 @@ public class HomepageController implements Initializable {
             }
         }
     }
+    
+    private int calculatePrice(LocalDateTime entry, LocalDateTime exit) {
+    long hours = ChronoUnit.HOURS.between(entry, exit);
+    if (hours < 1) return 20;
+    else if (hours == 1) return 20;
+    else if (hours == 2) return 30;
+    else if (hours == 3) return 50;
+    else return 70;
+}
+
 
     @FXML
-    private void delActn(ActionEvent event) {
-        Vehicles selected = tableview.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            try (Connection con = DBConnect.connect();
-                 PreparedStatement stmt = con.prepareStatement(
-                     "DELETE FROM vehicles WHERE id=? AND user_id=?")) {
+private void delActn(ActionEvent event) {
+    Vehicles selected = tableview.getSelectionModel().getSelectedItem();
+    if (selected == null) return;
 
-                stmt.setInt(1, Integer.parseInt(selected.getId()));
-                stmt.setInt(2, loggedInUserId);
+    try {
+        Connection conn = DBConnect.connect();
 
-                stmt.executeUpdate();
-                loadDataFromDatabase();
-                clearFields();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        // Parse times
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime entryTime = LocalDateTime.parse(selected.getEntime(), formatter);
+        LocalDateTime exitTime = LocalDateTime.now();
+
+        int duration = (int) ChronoUnit.HOURS.between(entryTime, exitTime);
+        int price = calculatePrice(entryTime, exitTime);
+
+        // Insert into transactions
+        String sql = "INSERT INTO transactions (user_id, vtype, vnumber, slot, entime, extime, duration_hours, price) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setInt(1, loggedInUserId);
+        pst.setString(2, selected.getVtype());
+        pst.setString(3, selected.getVnumber());
+        pst.setString(4, selected.getSlot());
+        pst.setString(5, selected.getEntime());
+        pst.setString(6, exitTime.format(formatter));
+        pst.setInt(7, duration);
+        pst.setInt(8, price);
+
+        pst.executeUpdate();
+
+        // Delete from vehicles
+        PreparedStatement deleteStmt = conn.prepareStatement("DELETE FROM vehicles WHERE id = ? AND user_id = ?");
+        deleteStmt.setString(1, selected.getId());
+        deleteStmt.setInt(2, loggedInUserId);
+        deleteStmt.executeUpdate();
+
+        loadDataFromDatabase(); // Refresh table
+        clearFields();
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
+
 
     private void clearFields() {
         tfID.clear();
@@ -167,5 +215,9 @@ public class HomepageController implements Initializable {
         tfAS.clear();
         tfET.clear();
         tfAT.clear();
+    }
+
+    @FXML
+    private void transactn(ActionEvent event) {
     }
 }

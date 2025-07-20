@@ -34,5 +34,6 @@
       <Button fx:id="addbtn" layoutX="669.0" layoutY="97.0" mnemonicParsing="false" onAction="#addActn" styleClass="transparent-button" stylesheets="@../../style.css" text="Add" />
       <Button fx:id="upbtn" layoutX="669.0" layoutY="141.0" mnemonicParsing="false" onAction="#upActn" prefHeight="38.0" prefWidth="139.0" styleClass="transparent-button" stylesheets="@../../style.css" text="Update" />
       <Button fx:id="delbtn" layoutX="732.0" layoutY="97.0" mnemonicParsing="false" onAction="#delActn" styleClass="transparent-button" stylesheets="@../../style.css" text="Delete" />
+      <Button fx:id="trnscbtn" layoutX="669.0" layoutY="187.0" mnemonicParsing="false" onAction="#transactn" prefHeight="38.0" prefWidth="139.0" styleClass="transparent-button" stylesheets="@../../style.css" text="Transactions" />
    </children>
 </AnchorPane>

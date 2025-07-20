@@ -14,6 +14,10 @@ public class Vehicles {
     private SimpleStringProperty entime;
     private SimpleStringProperty alltime;
     private SimpleStringProperty userId; // NEW
+    
+     public Vehicles(String id, String vtype, String vnumber, String slot, String entime, String alltime) {
+        this(id, vtype, vnumber, slot, entime, alltime, null); // call the main constructor with null userId
+    }
 
     public Vehicles(String id, String vtype, String vnumber, String slot, String entime, String alltime, String userId) {
         this.id = new SimpleStringProperty(id);
@@ -26,13 +30,13 @@ public class Vehicles {
     }
 
     // Getters
-    public String getId() { return id.get(); }
+   public String getId() { return id.get(); }
     public String getVtype() { return vtype.get(); }
     public String getVnumber() { return vnumber.get(); }
     public String getSlot() { return slot.get(); }
     public String getEntime() { return entime.get(); }
     public String getAlltime() { return alltime.get(); }
-    public String getAdmin() { return userId.get(); } // NEW
+    public String getUserId() { return userId == null ? null : userId.get(); }
 
     // Setters
     public void setId(String id) { this.id.set(id); }
@@ -41,6 +45,12 @@ public class Vehicles {
     public void setSlot(String slot) { this.slot.set(slot); }
     public void setEntime(String entime) { this.entime.set(entime); }
     public void setAlltime(String alltime) { this.alltime.set(alltime); }
-    public void setAdmin(String admin) { this.userId.set(admin); } // NEW
+    public void setUserId(String userId) { 
+        if (this.userId == null) {
+            this.userId = new SimpleStringProperty(userId);
+        } else {
+            this.userId.set(userId); 
+        }
+    }
 }
 
