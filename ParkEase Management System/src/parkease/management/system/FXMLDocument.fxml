@@ -14,9 +14,9 @@
             <Image url="@../../../1.png" />
          </image>
       </ImageView>
-      <TextField fx:id="nmfd" layoutX="449.0" layoutY="159.0" prefHeight="31.0" prefWidth="222.0" promptText="enter name" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
-      <Button fx:id="lgnbtn" layoutX="449.0" layoutY="251.0" mnemonicParsing="false" onAction="#loginMethod" prefHeight="36.0" prefWidth="106.0" styleClass="transparent-button" stylesheets="@../../style.css" text="Login" />
-      <Button fx:id="supbtn" layoutX="565.0" layoutY="251.0" mnemonicParsing="false" onAction="#supmethod" prefHeight="36.0" prefWidth="106.0" styleClass="transparent-button" stylesheets="@../../style.css" text="Sign up" />
+      <TextField fx:id="nmfd" layoutX="448.0" layoutY="149.0" prefHeight="31.0" prefWidth="222.0" promptText="enter name" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
+      <Button fx:id="lgnbtn" layoutX="448.0" layoutY="258.0" mnemonicParsing="false" onAction="#loginMethod" prefHeight="36.0" prefWidth="106.0" styleClass="transparent-button" stylesheets="@../../style.css" text="Login" />
+      <Button fx:id="supbtn" layoutX="564.0" layoutY="258.0" mnemonicParsing="false" onAction="#supmethod" prefHeight="36.0" prefWidth="106.0" styleClass="transparent-button" stylesheets="@../../style.css" text="Sign up" />
       <PasswordField fx:id="psfd" layoutX="448.0" layoutY="202.0" prefHeight="33.0" prefWidth="222.0" promptText="enter password" styleClass="modern-textfield" stylesheets="@../../txtfd.css" />
    </children>
 </AnchorPane>

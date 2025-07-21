@@ -6,23 +6,23 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="387.0" prefWidth="666.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1" fx:controller="parkease.management.system.TransactionController">
+<AnchorPane id="AnchorPane" prefHeight="459.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="parkease.management.system.TransactionController">
    <children>
-      <ImageView fitHeight="432.0" fitWidth="708.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="463.0" fitWidth="815.0" layoutX="-7.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../3.png" />
          </image>
       </ImageView>
-      <TableView layoutX="9.0" layoutY="38.0" prefHeight="347.0" prefWidth="690.0" stylesheets="@../../table.css">
+      <TableView fx:id="transactionTable" layoutX="9.0" layoutY="69.0" prefHeight="347.0" prefWidth="794.0" stylesheets="@../../table.css">
         <columns>
-          <TableColumn fx:id="colType" prefWidth="111.0" text="Vehicle Type" />
-          <TableColumn fx:id="colNum" prefWidth="118.0" text="Vehicle Number" />
-            <TableColumn fx:id="colErT" prefWidth="89.0" text="Entry Time" />
-            <TableColumn fx:id="colExT" prefWidth="84.0" text="Exit Time" />
-            <TableColumn fx:id="colDurT" prefWidth="72.0" text="Duration" />
-            <TableColumn fx:id="colPrice" prefWidth="84.0" text="Price" />
-            <TableColumn fx:id="colAdmin" prefWidth="112.0" text="Admin ID" />
+            <TableColumn fx:id="colId" prefWidth="38.0" text="ID" />
+          <TableColumn fx:id="colType" prefWidth="56.0" text="Type" />
+          <TableColumn fx:id="colNum" prefWidth="110.0" text="No." />
+            <TableColumn fx:id="colErT" prefWidth="201.0" text="Entry Time" />
+            <TableColumn fx:id="colExT" prefWidth="201.0" text="Exit Time" />
+            <TableColumn fx:id="colDurT" prefWidth="50.0" text="Time" />
+            <TableColumn fx:id="colPrice" prefWidth="53.0" text="Price" />
+            <TableColumn fx:id="colAdmin" prefWidth="91.0" text="Admin ID" />
         </columns>
       </TableView>
    </children>
