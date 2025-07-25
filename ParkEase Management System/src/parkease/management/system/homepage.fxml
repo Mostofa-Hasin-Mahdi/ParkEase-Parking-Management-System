@@ -39,7 +39,7 @@
          <font>
             <Font name="Arial" size="11.0" />
          </font></Button>
-      <Button fx:id="upbtn" layoutX="667.0" layoutY="204.0" mnemonicParsing="false" onAction="#upActn" prefHeight="38.0" prefWidth="158.0" styleClass="transparent-button" text="Update">
+      <Button fx:id="upbtn" layoutX="670.0" layoutY="204.0" mnemonicParsing="false" onAction="#upActn" prefHeight="38.0" prefWidth="158.0" styleClass="transparent-button" text="Update">
          <stylesheets>
             <URL value="@../../style.css" />
             <URL value="@../../btnnew.css" />

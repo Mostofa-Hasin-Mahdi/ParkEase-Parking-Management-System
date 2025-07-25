@@ -88,13 +88,91 @@ public class HomepageController implements Initializable {
     showCurrentUsername();
     }
     
+    private void initializeParkingSlots() {
+    // First generate all possible slots
+    ObservableList<String> allSlots = FXCollections.observableArrayList();
+    for (char letter = 'A'; letter <= 'E'; letter++) {
+        for (int number = 1; number <= 4; number++) {
+            allSlots.add(letter + String.valueOf(number));
+        }
+    }
+    
+    // Now refresh available slots by filtering occupied ones
+    refreshAvailableSlots(allSlots);
+}
+    
+    
+private void initializeMetroCodes() {
+    ObservableList<String> metroCodes = FXCollections.observableArrayList();
+    
+    // Dhaka Metro (DHA-)
+    metroCodes.addAll(
+        "DHA-KA", "DHA-KHA", "DHA-GA", "DHA-GHA",
+        "DHA-CH", "DHA-CHA", "DHA-JA", "DHA-JHA",
+        "DHA-TA", "DHA-THA", "DHA-DA", "DHA-NA"
+    );
+    
+    // Chittagong Metro (CHA-)
+    metroCodes.addAll(
+        "CHA-KA", "CHA-KHA", "CHA-GA", "CHA-GHA",
+        "CHA-CH", "CHA-CHA", "CHA-JA", "CHA-JHA"
+    );
+    
+    // Khulna Metro (KHA-)
+    metroCodes.addAll(
+        "KHA-KA", "KHA-KHA", "KHA-GA", "KHA-GHA",
+        "KHA-CH", "KHA-CHA", "KHA-JA"
+    );
+    
+    // Rajshahi Metro (RA-)
+    metroCodes.addAll(
+        "RA-KA", "RA-KHA", "RA-GA", "RA-GHA",
+        "RA-CH", "RA-CHA", "RA-JA"
+    );
+    
+    // Sylhet Metro (SY-)
+    metroCodes.addAll(
+        "SY-KA", "SY-KHA", "SY-GA", "SY-GHA",
+        "SY-CH", "SY-CHA"
+    );
+    
+    // Barishal Metro (BA-)
+    metroCodes.addAll(
+        "BA-KA", "BA-KHA", "BA-GA", "BA-CH",
+        "BA-CHA", "BA-JA"
+    );
+    
+    // Rangpur Metro (R-)
+    metroCodes.addAll(
+        "R-KA", "R-KHA", "R-GA", "R-CH",
+        "R-CHA", "R-JA"
+    );
+    
+    // Mymensingh Metro (MY-)
+    metroCodes.addAll(
+        "MY-KA", "MY-KHA", "MY-GA", "MY-CH",
+        "MY-CHA"
+    );
+    
+    // Add military and special codes
+    metroCodes.addAll(
+        "MIL-KA",  // Military vehicles
+        "GOV-KA",  // Government vehicles
+        "DIP-KA",  // Diplomatic vehicles
+        "PRI-KA"   // Privileged vehicles
+    );
+    
+    cbMetroCode.getItems().setAll(metroCodes);
+}
+    
     
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cbVehicleType.getItems().addAll("Sedan", "SUV", "Motorcycle", "Truck");
-        cbAllocatedSlot.getItems().addAll("A1", "A2", "A3", "B1", "B2", "B3");
-        cbMetroCode.getItems().addAll("DHA-GHA", "DHA-LA", "DHA-GA", "DHA-HA");
+       
+        initializeMetroCodes();
+        initializeParkingSlots();
         // Set up table columns
          colID.setCellValueFactory(new PropertyValueFactory<>("id"));      
     colType.setCellValueFactory(new PropertyValueFactory<>("vtype"));  
@@ -155,7 +233,7 @@ public class HomepageController implements Initializable {
     tableview.setItems(vehicleList);
 }
     
-    private void refreshAvailableSlots() {
+   private void refreshAvailableSlots(ObservableList<String> allSlots) {
     try (Connection con = DBConnect.connect();
          PreparedStatement stmt = con.prepareStatement(
              "SELECT slot FROM vehicles WHERE slot IS NOT NULL")) {
@@ -167,13 +245,9 @@ public class HomepageController implements Initializable {
             occupiedSlots.add(rs.getString("slot"));
         }
         
-        // Get all possible slots
-        ObservableList<String> allSlots = FXCollections.observableArrayList(
-            "A1", "A2", "A3", "B1", "B2", "B3");
-        
-        // Filter out occupied slots
-        ObservableList<String> availableSlots = allSlots.filtered(
-            slot -> !occupiedSlots.contains(slot));
+        // Filter out occupied slots from all possible slots
+        ObservableList<String> availableSlots = FXCollections.observableArrayList(allSlots);
+        availableSlots.removeAll(occupiedSlots);
         
         // Update ComboBox
         cbAllocatedSlot.setItems(availableSlots);
@@ -182,11 +256,9 @@ public class HomepageController implements Initializable {
         e.printStackTrace();
     }
 }
-
-@FXML
+    
+ @FXML
 private void addActn(ActionEvent event) {
-    
-    
     try (Connection con = DBConnect.connect();
          PreparedStatement stmt = con.prepareStatement(
              "INSERT INTO vehicles (user_id, vtype, vnumber, slot, entime, alltime) VALUES (?, ?, ?, ?, ?, ?)",
@@ -213,14 +285,12 @@ private void addActn(ActionEvent event) {
         int affectedRows = stmt.executeUpdate();
         
         if (affectedRows > 0) {
-            // Get the admin name from database
             String adminName = getAdminName(loggedInUserId);
-            
-            // Show parking slip
             showParkingSlip(vehicleType, vehicleNumber, formattedTime, 
                           allocatedSlot, tfAT.getText(), adminName);
             
-            refreshAvailableSlots();
+            // Regenerate all slots and refresh available ones
+            initializeParkingSlots();
             loadDataFromDatabase();
             clearFields();
         }
@@ -228,7 +298,6 @@ private void addActn(ActionEvent event) {
         e.printStackTrace();
     }
 }
-
 private String getAdminName(int userId) throws Exception {
     try (Connection con = DBConnect.connect();
          PreparedStatement stmt = con.prepareStatement(
@@ -346,8 +415,8 @@ private void delActn(ActionEvent event) {
             deleteStmt.executeUpdate();
         }
 
+        initializeParkingSlots();
         loadDataFromDatabase();
-        refreshAvailableSlots();
         clearFields();
     } catch (Exception e) {
         e.printStackTrace();
@@ -362,6 +431,10 @@ private void delActn(ActionEvent event) {
     cbMetroCode.getSelectionModel().clearSelection();
     cbAllocatedSlot.getSelectionModel().clearSelection();
 }
+
+
+
+
 
     @FXML
     private void transactn(ActionEvent event) throws IOException {
