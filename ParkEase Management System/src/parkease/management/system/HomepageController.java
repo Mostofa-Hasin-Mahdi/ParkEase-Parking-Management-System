@@ -12,6 +12,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
 import java.sql.Timestamp;  
+import java.util.HashSet;
+import java.util.Set;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -125,9 +127,39 @@ public class HomepageController implements Initializable {
     }
     tableview.setItems(vehicleList);
 }
+    
+    private void refreshAvailableSlots() {
+    try (Connection con = DBConnect.connect();
+         PreparedStatement stmt = con.prepareStatement(
+             "SELECT slot FROM vehicles WHERE slot IS NOT NULL")) {
+        
+        ResultSet rs = stmt.executeQuery();
+        Set<String> occupiedSlots = new HashSet<>();
+        
+        while (rs.next()) {
+            occupiedSlots.add(rs.getString("slot"));
+        }
+        
+        // Get all possible slots
+        ObservableList<String> allSlots = FXCollections.observableArrayList(
+            "A1", "A2", "A3", "B1", "B2", "B3");
+        
+        // Filter out occupied slots
+        ObservableList<String> availableSlots = allSlots.filtered(
+            slot -> !occupiedSlots.contains(slot));
+        
+        // Update ComboBox
+        cbAllocatedSlot.setItems(availableSlots);
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 
 @FXML
 private void addActn(ActionEvent event) {
+    
+    
     try (Connection con = DBConnect.connect();
          PreparedStatement stmt = con.prepareStatement(
              "INSERT INTO vehicles (user_id, vtype, vnumber, slot, entime, alltime) VALUES (?, ?, ?, ?, ?, ?)")) {
@@ -150,6 +182,7 @@ private void addActn(ActionEvent event) {
         stmt.setString(6, tfAT.getText());
 
         stmt.executeUpdate();
+        refreshAvailableSlots();
         loadDataFromDatabase();
         clearFields();
     } catch (Exception e) {
@@ -237,6 +270,7 @@ private void delActn(ActionEvent event) {
         }
 
         loadDataFromDatabase();
+        refreshAvailableSlots();
         clearFields();
     } catch (Exception e) {
         e.printStackTrace();
