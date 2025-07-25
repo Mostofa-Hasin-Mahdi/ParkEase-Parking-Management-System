@@ -33,6 +33,18 @@ public class ParkingslipController implements Initializable {
     /**
      * Initializes the controller class.
      */
+    
+    public void setParkingData(String vehicleType, String vehicleNumber, 
+                             String entryTime, String slot, 
+                             String allocatedTime, String adminName) {
+        vtype.setText(vehicleType);
+        vnum.setText(vehicleNumber);
+        entime.setText(entryTime);
+        pslot.setText(slot);
+        alltime.setText(allocatedTime);
+        admin.setText(adminName);
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

@@ -162,32 +162,79 @@ private void addActn(ActionEvent event) {
     
     try (Connection con = DBConnect.connect();
          PreparedStatement stmt = con.prepareStatement(
-             "INSERT INTO vehicles (user_id, vtype, vnumber, slot, entime, alltime) VALUES (?, ?, ?, ?, ?, ?)")) {
-
-        // Get values from ComboBoxes
+             "INSERT INTO vehicles (user_id, vtype, vnumber, slot, entime, alltime) VALUES (?, ?, ?, ?, ?, ?)",
+             PreparedStatement.RETURN_GENERATED_KEYS)) {
+        
+        // Get input values
         String vehicleType = cbVehicleType.getValue();
         String metroCode = cbMetroCode.getValue();
-        String vehicleNumber = metroCode + "-" + tfVN.getText(); // Combine metro code and number
+        String vehicleNumber = metroCode + "-" + tfVN.getText();
         String allocatedSlot = cbAllocatedSlot.getValue();
-
-        // Auto-set current timestamp
+        
+        // Set current time
         LocalDateTime now = LocalDateTime.now();
-        Timestamp timestamp = Timestamp.valueOf(now);
-
+        String formattedTime = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        
+        // Execute insert
         stmt.setInt(1, loggedInUserId);
         stmt.setString(2, vehicleType);
-        stmt.setString(3, vehicleNumber); // Combined metro code + number
+        stmt.setString(3, vehicleNumber);
         stmt.setString(4, allocatedSlot);
-        stmt.setTimestamp(5, timestamp);
+        stmt.setString(5, formattedTime);
         stmt.setString(6, tfAT.getText());
-
-        stmt.executeUpdate();
-        refreshAvailableSlots();
-        loadDataFromDatabase();
-        clearFields();
+        
+        int affectedRows = stmt.executeUpdate();
+        
+        if (affectedRows > 0) {
+            // Get the admin name from database
+            String adminName = getAdminName(loggedInUserId);
+            
+            // Show parking slip
+            showParkingSlip(vehicleType, vehicleNumber, formattedTime, 
+                          allocatedSlot, tfAT.getText(), adminName);
+            
+            refreshAvailableSlots();
+            loadDataFromDatabase();
+            clearFields();
+        }
     } catch (Exception e) {
         e.printStackTrace();
-        // Show error alert to user
+    }
+}
+
+private String getAdminName(int userId) throws Exception {
+    try (Connection con = DBConnect.connect();
+         PreparedStatement stmt = con.prepareStatement(
+             "SELECT username FROM users WHERE id = ?")) {
+        
+        stmt.setInt(1, userId);
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            return rs.getString("username");
+        }
+        return "Admin " + userId;
+    }
+}
+
+private void showParkingSlip(String vehicleType, String vehicleNumber, 
+                           String entryTime, String slot, 
+                           String allocatedTime, String adminName) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("parkingslip.fxml"));
+        Parent root = loader.load();
+        
+        // Get controller and set data
+        ParkingslipController controller = loader.getController();
+        controller.setParkingData(vehicleType, vehicleNumber, entryTime, 
+                                slot, allocatedTime, adminName);
+        
+        Stage stage = new Stage();
+        stage.setTitle("Parking Slip");
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (Exception e) {
+        e.printStackTrace();
     }
 }
 
