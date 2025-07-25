@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="579.0" prefWidth="385.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20.0.1" fx:controller="parkease.management.system.ParkingslipController">
+<AnchorPane id="AnchorPane" prefHeight="579.0" prefWidth="385.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="parkease.management.system.ParkingslipController">
    <children>
       <ImageView fitHeight="593.0" fitWidth="444.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -44,12 +43,12 @@
             <Font name="Arial Black" size="15.0" />
          </font>
       </Label>
-      <Label fx:id="vtype" layoutX="214.0" layoutY="276.0" prefHeight="17.0" prefWidth="155.0">
+      <Label fx:id="vtype" layoutX="220.0" layoutY="274.0" prefHeight="17.0" prefWidth="155.0">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="vnum" layoutX="214.0" layoutY="291.0" prefHeight="17.0" prefWidth="155.0">
+      <Label fx:id="vnum" layoutX="220.0" layoutY="291.0" prefHeight="17.0" prefWidth="155.0">
          <font>
             <Font size="15.0" />
          </font>

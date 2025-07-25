@@ -81,7 +81,7 @@ private void loginMethod(ActionEvent event) throws IOException {
     @FXML
     private void supmethod(ActionEvent event) throws IOException {
              Stage stage = new Stage();
-             Parent root = FXMLLoader.load(getClass().getResource("FXML.fxml"));
+             Parent root = FXMLLoader.load(getClass().getResource("signup.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
