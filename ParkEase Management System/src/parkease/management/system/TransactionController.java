@@ -64,10 +64,10 @@ public class TransactionController implements Initializable {
     transactionList.clear();
     try (Connection con = DBConnect.connect();
          PreparedStatement stmt = con.prepareStatement(
-             "SELECT t.*, u.username " +  // Join with users table to get usernames
+             "SELECT t.*, u.username " +  
              "FROM transactions t " +
              "LEFT JOIN users u ON t.user_id = u.id " +
-             "ORDER BY t.entime DESC")) {  // Newest transactions first
+             "ORDER BY t.entime DESC")) {  
         
         ResultSet rs = stmt.executeQuery();
 
@@ -80,7 +80,7 @@ public class TransactionController implements Initializable {
                 rs.getString("extime"),
                 rs.getString("duration") + " hrs",
                 rs.getString("price"),
-                rs.getString("username")  // Show username instead of "Admin X"
+                rs.getString("username") 
             ));
         }
         transactionTable.setItems(transactionList);

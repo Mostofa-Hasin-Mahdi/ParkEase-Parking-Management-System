@@ -13,13 +13,13 @@ public class Vehicles {
     private SimpleStringProperty slot;
     private SimpleStringProperty entime;
     private SimpleStringProperty alltime;
-    private SimpleStringProperty userId; // NEW
-    private SimpleStringProperty duration;  // NEW
-    private SimpleStringProperty price;     // NEW
+    private SimpleStringProperty userId; 
+    private SimpleStringProperty duration; 
+    private SimpleStringProperty price;    
 
     
      public Vehicles(String id, String vtype, String vnumber, String slot, String entime, String alltime) {
-        this(id, vtype, vnumber, slot, entime, alltime, null); // call the main constructor with null userId
+        this(id, vtype, vnumber, slot, entime, alltime, null); 
     }
 
     public Vehicles(String id, String vtype, String vnumber, String slot, String entime, String alltime, String userId) {
@@ -27,7 +27,7 @@ public class Vehicles {
         this.vtype = new SimpleStringProperty(vtype);
         this.vnumber = new SimpleStringProperty(vnumber);
         this.slot = new SimpleStringProperty(slot);
-        this.entime = new SimpleStringProperty(entime); // DB datetime converted to String
+        this.entime = new SimpleStringProperty(entime);
         this.alltime = new SimpleStringProperty(alltime);
     }
 
@@ -36,7 +36,7 @@ public class Vehicles {
     public String getVtype() { return vtype.get(); }
     public String getVnumber() { return vnumber.get(); }
     public String getSlot() { return slot.get(); }
-    public String getEntime() { return entime.get(); }  // Critical: Name must match TableColumn
+    public String getEntime() { return entime.get(); } 
     public String getAlltime() { return alltime.get(); }
     public String getUserId() { return userId == null ? null : userId.get(); }
     

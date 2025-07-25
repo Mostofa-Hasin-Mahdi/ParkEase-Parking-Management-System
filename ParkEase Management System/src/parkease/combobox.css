@@ -1,0 +1,62 @@
+/* Modern ComboBox Styling */
+.combo-box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1.5px;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+
+.combo-box:hover {
+    -fx-border-color: #4a90e2;
+    -fx-effect: dropshadow(three-pass-box, rgba(74,144,226,0.15), 5, 0, 0, 3);
+}
+
+.combo-box:showing {
+    -fx-border-color: #4a90e2;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 8px 0 0;
+}
+
+.combo-box .arrow {
+    -fx-background-color: #666666;
+    -fx-shape: "M0,0 L4,5 L8,0 Z";
+}
+
+.combo-box .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #333333;
+    -fx-padding: 8px 12px;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #f5f9ff;
+    -fx-text-fill: #4a90e2;
+}
+
+.combo-box .list-view {
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 6px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 3);
+    -fx-pref-width: 200px;
+}
+
+.combo-box .list-cell:filled:selected {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+}
+
+/* For editable ComboBox */
+.combo-box .text-input {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 12px;
+}

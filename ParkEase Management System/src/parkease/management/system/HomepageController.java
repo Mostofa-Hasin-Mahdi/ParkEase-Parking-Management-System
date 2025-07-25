@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
-// Change this import at the top of your file:
-import java.sql.Timestamp;  // Correct import (was previously java.security.Timestamp)
+
+import java.sql.Timestamp;  
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -37,11 +38,9 @@ public class HomepageController implements Initializable {
     @FXML private TableColumn<Vehicles, String> colErT;
     @FXML private TableColumn<Vehicles, String> colAt;
 
-    @FXML private TextField tfID;
-    @FXML private TextField tfVT;
-    @FXML private TextField tfAS;
+    private TextField tfID;
     @FXML private TextField tfVN;
-    @FXML private TextField tfET;
+    private TextField tfET;
     @FXML private TextField tfAT;
 
     @FXML private Button addbtn;
@@ -51,6 +50,12 @@ public class HomepageController implements Initializable {
     private int loggedInUserId;
     @FXML
     private Button trnscbtn;
+    @FXML
+    private ComboBox<String> cbVehicleType;
+    @FXML
+    private ComboBox<String> cbMetroCode;
+    @FXML
+    private ComboBox<String> cbAllocatedSlot;
 
     // Called externally from login controller
     public void setLoggedInUserId(int id) {
@@ -61,25 +66,33 @@ public class HomepageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        cbVehicleType.getItems().addAll("Car", "SUV", "Motorcycle", "Truck");
+        cbAllocatedSlot.getItems().addAll("A1", "A2", "A3", "B1", "B2", "B3");
+        cbMetroCode.getItems().addAll("DHA-GHA", "DHA-LA", "DHA-GA", "DHA-Ha");
         // Set up table columns
-         colID.setCellValueFactory(new PropertyValueFactory<>("id"));       // getId()
-    colType.setCellValueFactory(new PropertyValueFactory<>("vtype"));  // getVtype()
-    colNum.setCellValueFactory(new PropertyValueFactory<>("vnumber")); // getVnumber()
-    colSlot.setCellValueFactory(new PropertyValueFactory<>("slot"));   // getSlot()
-    colErT.setCellValueFactory(new PropertyValueFactory<>("entime"));  // getEntime()
-    colAt.setCellValueFactory(new PropertyValueFactory<>("alltime"));  // getAlltime()
+         colID.setCellValueFactory(new PropertyValueFactory<>("id"));      
+    colType.setCellValueFactory(new PropertyValueFactory<>("vtype"));  
+    colNum.setCellValueFactory(new PropertyValueFactory<>("vnumber"));
+    colSlot.setCellValueFactory(new PropertyValueFactory<>("slot"));   
+    colErT.setCellValueFactory(new PropertyValueFactory<>("entime"));  
+    colAt.setCellValueFactory(new PropertyValueFactory<>("alltime"));  
 
         tableview.setOnMouseClicked(event -> {
-            Vehicles selected = tableview.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                tfID.setText(selected.getId());
-                tfVT.setText(selected.getVtype());
-                tfVN.setText(selected.getVnumber());
-                tfAS.setText(selected.getSlot());
-                tfET.setText(selected.getEntime());
-                tfAT.setText(selected.getAlltime());
-            }
-        });
+    Vehicles selected = tableview.getSelectionModel().getSelectedItem();
+    if (selected != null) {
+        // No need to set tfID or tfET anymore
+        cbVehicleType.setValue(selected.getVtype());
+        
+        String[] parts = selected.getVnumber().split("-");
+        if (parts.length >= 2) {
+            cbMetroCode.setValue(parts[0]);
+            tfVN.setText(parts[1]);
+        }
+        
+        cbAllocatedSlot.setValue(selected.getSlot());
+        tfAT.setText(selected.getAlltime());
+    }
+});
     }
 
     private void loadDataFromDatabase() {
@@ -91,7 +104,7 @@ public class HomepageController implements Initializable {
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-            // Format the timestamp to string for display
+            
             String entimeStr = rs.getTimestamp("entime") != null 
                 ? rs.getTimestamp("entime").toLocalDateTime()
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
@@ -119,15 +132,21 @@ private void addActn(ActionEvent event) {
          PreparedStatement stmt = con.prepareStatement(
              "INSERT INTO vehicles (user_id, vtype, vnumber, slot, entime, alltime) VALUES (?, ?, ?, ?, ?, ?)")) {
 
-        // Auto-set current timestamp for entime
+        // Get values from ComboBoxes
+        String vehicleType = cbVehicleType.getValue();
+        String metroCode = cbMetroCode.getValue();
+        String vehicleNumber = metroCode + "-" + tfVN.getText(); // Combine metro code and number
+        String allocatedSlot = cbAllocatedSlot.getValue();
+
+        // Auto-set current timestamp
         LocalDateTime now = LocalDateTime.now();
         Timestamp timestamp = Timestamp.valueOf(now);
 
         stmt.setInt(1, loggedInUserId);
-        stmt.setString(2, tfVT.getText());
-        stmt.setString(3, tfVN.getText());
-        stmt.setString(4, tfAS.getText());
-        stmt.setTimestamp(5, timestamp);  // Store as timestamp
+        stmt.setString(2, vehicleType);
+        stmt.setString(3, vehicleNumber); // Combined metro code + number
+        stmt.setString(4, allocatedSlot);
+        stmt.setTimestamp(5, timestamp);
         stmt.setString(6, tfAT.getText());
 
         stmt.executeUpdate();
@@ -135,8 +154,10 @@ private void addActn(ActionEvent event) {
         clearFields();
     } catch (Exception e) {
         e.printStackTrace();
+        // Show error alert to user
     }
 }
+
 
     @FXML
 private void upActn(ActionEvent event) {
@@ -144,19 +165,20 @@ private void upActn(ActionEvent event) {
     if (selected != null) {
         try (Connection con = DBConnect.connect();
              PreparedStatement stmt = con.prepareStatement(
-                 "UPDATE vehicles SET vtype=?, vnumber=?, slot=?, entime=?, alltime=? WHERE id=? AND user_id=?")) {
+                 "UPDATE vehicles SET vtype=?, vnumber=?, slot=?, alltime=? WHERE id=? AND user_id=?")) {
 
-            // Parse the existing entime string back to timestamp
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime entime = LocalDateTime.parse(tfET.getText(), formatter);
+            // Get values from ComboBoxes
+            String vehicleType = cbVehicleType.getValue();
+            String metroCode = cbMetroCode.getValue();
+            String vehicleNumber = metroCode + "-" + tfVN.getText();
+            String allocatedSlot = cbAllocatedSlot.getValue();
 
-            stmt.setString(1, tfVT.getText());
-            stmt.setString(2, tfVN.getText());
-            stmt.setString(3, tfAS.getText());
-            stmt.setTimestamp(4, Timestamp.valueOf(entime));  // Store as timestamp
-            stmt.setString(5, tfAT.getText());
-            stmt.setInt(6, Integer.parseInt(selected.getId()));
-            stmt.setInt(7, loggedInUserId);
+            stmt.setString(1, vehicleType);
+            stmt.setString(2, vehicleNumber);
+            stmt.setString(3, allocatedSlot);
+            stmt.setString(4, tfAT.getText());
+            stmt.setInt(5, Integer.parseInt(selected.getId()));
+            stmt.setInt(6, loggedInUserId);
 
             stmt.executeUpdate();
             loadDataFromDatabase();
@@ -171,11 +193,12 @@ private void upActn(ActionEvent event) {
     
     private int calculatePrice(LocalDateTime entry, LocalDateTime exit) {
     long hours = ChronoUnit.HOURS.between(entry, exit);
-    if (hours < 1) return 20;
-    else if (hours == 1) return 20;
-    else if (hours == 2) return 30;
-    else if (hours == 3) return 50;
-    else return 70;
+    int price = 30;
+    if (hours <= 3) return price;
+    else{
+        price = price + 10;
+        return price;
+    }
 }
 
 
@@ -198,8 +221,8 @@ private void delActn(ActionEvent event) {
             pst.setInt(1, loggedInUserId);
             pst.setString(2, selected.getVtype());
             pst.setString(3, selected.getVnumber());
-            pst.setString(4, selected.getEntime());  // Original entry time
-            pst.setString(5, exitTime.format(formatter));  // Exit time
+            pst.setString(4, selected.getEntime()); 
+            pst.setString(5, exitTime.format(formatter)); 
             pst.setString(6, String.valueOf(duration));
             pst.setString(7, String.valueOf(price));
             pst.executeUpdate();
@@ -222,13 +245,12 @@ private void delActn(ActionEvent event) {
 
 
     private void clearFields() {
-        tfID.clear();
-        tfVT.clear();
-        tfVN.clear();
-        tfAS.clear();
-        tfET.clear();
-        tfAT.clear();
-    }
+    tfVN.clear();
+    tfAT.clear();
+    cbVehicleType.getSelectionModel().clearSelection();
+    cbMetroCode.getSelectionModel().clearSelection();
+    cbAllocatedSlot.getSelectionModel().clearSelection();
+}
 
     @FXML
     private void transactn(ActionEvent event) throws IOException {
