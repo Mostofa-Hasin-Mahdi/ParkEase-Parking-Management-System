@@ -25,6 +25,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -58,13 +59,36 @@ public class HomepageController implements Initializable {
     private ComboBox<String> cbMetroCode;
     @FXML
     private ComboBox<String> cbAllocatedSlot;
+    @FXML
+    private Label currentUser;
+    @FXML
+    private Button logout;
+    
+    private void showCurrentUsername() {
+    try (Connection con = DBConnect.connect();
+         PreparedStatement stmt = con.prepareStatement("SELECT username FROM users WHERE id = ?")) {
+        
+        stmt.setInt(1, loggedInUserId);
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            currentUser.setText("" + rs.getString("username"));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        currentUser.setText("User: Unknown");
+    }
+}
 
     // Called externally from login controller
     public void setLoggedInUserId(int id) {
          this.loggedInUserId = id;
     Session.getInstance().setUserID(id); 
     loadDataFromDatabase();
+    showCurrentUsername();
     }
+    
+    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -95,6 +119,9 @@ public class HomepageController implements Initializable {
         tfAT.setText(selected.getAlltime());
     }
 });
+        
+        
+        
     }
 
     private void loadDataFromDatabase() {
@@ -345,5 +372,11 @@ private void delActn(ActionEvent event) {
         stage.setScene(new Scene(root));
         stage.show();
     
+    }
+
+    @FXML
+    private void UserLogout(ActionEvent event) {
+        Stage stage = (Stage) logout.getScene().getWindow();
+    stage.close();
     }
 }
