@@ -68,9 +68,9 @@ public class HomepageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        cbVehicleType.getItems().addAll("Car", "SUV", "Motorcycle", "Truck");
+        cbVehicleType.getItems().addAll("Sedan", "SUV", "Motorcycle", "Truck");
         cbAllocatedSlot.getItems().addAll("A1", "A2", "A3", "B1", "B2", "B3");
-        cbMetroCode.getItems().addAll("DHA-GHA", "DHA-LA", "DHA-GA", "DHA-Ha");
+        cbMetroCode.getItems().addAll("DHA-GHA", "DHA-LA", "DHA-GA", "DHA-HA");
         // Set up table columns
          colID.setCellValueFactory(new PropertyValueFactory<>("id"));      
     colType.setCellValueFactory(new PropertyValueFactory<>("vtype"));  
@@ -273,11 +273,14 @@ private void upActn(ActionEvent event) {
     
     private int calculatePrice(LocalDateTime entry, LocalDateTime exit) {
     long hours = ChronoUnit.HOURS.between(entry, exit);
-    int price = 30;
-    if (hours <= 3) return price;
-    else{
-        price = price + 10;
-        return price;
+    int basePrice = 30; // First 3 hours
+    
+    if (hours <= 3) {
+        return basePrice;
+    } else {
+        
+        long extraHours = hours - 3;
+        return basePrice + (int)extraHours * 10;
     }
 }
 
