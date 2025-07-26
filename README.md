@@ -17,7 +17,8 @@ A modern JavaFX application for efficient parking lot management with admin cont
 - Session tracking
 
 ### 🖥️ Interactive Dashboard
-<img width="840" height="473" alt="image" src="https://github.com/user-attachments/assets/d3cba756-ba9e-4bf4-bca9-65e9b354261f" />
+<img width="840" height="473" alt="image" src="https://github.com/user-attachments/assets/ff5bba1f-5433-48ec-801d-58dc4f6d7b46" />
+
 
 - Real-time admin session timer
 - Personalized welcome message
