@@ -12,8 +12,18 @@ import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
 import java.sql.Timestamp;  
+import java.time.Duration;
+
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,6 +73,11 @@ public class HomepageController implements Initializable {
     private Label currentUser;
     @FXML
     private Button logout;
+    @FXML
+    private Label shiftStartsLabel;
+    @FXML
+    private Label shiftTimerLabel;
+    
     
     private void showCurrentUsername() {
     try (Connection con = DBConnect.connect();
@@ -86,6 +101,7 @@ public class HomepageController implements Initializable {
     Session.getInstance().setUserID(id); 
     loadDataFromDatabase();
     showCurrentUsername();
+    startShiftTimer();
     }
     
     private void initializeParkingSlots() {
@@ -99,6 +115,70 @@ public class HomepageController implements Initializable {
     
     // Now refresh available slots by filtering occupied ones
     refreshAvailableSlots(allSlots);
+}
+    
+    // Add these instance variables
+private LocalDateTime shiftStartTime;
+private Timeline shiftTimer;
+private ScheduledExecutorService timerExecutor;
+
+private void startShiftTimer() {
+    shiftStartTime = LocalDateTime.now();
+    shiftStartsLabel.setText("Shift started: " + shiftStartTime.format(DateTimeFormatter.ofPattern("HH:mm:ss")));
+    
+    // Create a single-threaded scheduler
+    timerExecutor = Executors.newSingleThreadScheduledExecutor();
+    
+    // Update the timer label every second
+    timerExecutor.scheduleAtFixedRate(() -> {
+        Platform.runLater(() -> updateShiftTimer());
+    }, 0, 1, TimeUnit.SECONDS);
+}
+
+private void updateShiftTimer() {
+    Duration duration = Duration.between(shiftStartTime, LocalDateTime.now());
+    
+    long hours = duration.toHours();
+    long minutes = duration.toMinutes() % 60;
+    long seconds = duration.toSeconds() % 60;
+    
+    shiftTimerLabel.setText(String.format(
+        "Shift Duration: %02d:%02d:%02d",
+        hours, minutes, seconds
+    ));
+}
+
+private void endShiftTimer() {
+    // Shutdown the timer thread
+    if (timerExecutor != null) {
+        timerExecutor.shutdownNow();
+    }
+    
+    LocalDateTime endTime = LocalDateTime.now();
+    Duration duration = Duration.between(shiftStartTime, endTime);
+    
+    long hours = duration.toHours();
+    long minutes = duration.toMinutes() % 60;
+    long seconds = duration.toSeconds() % 60;
+    
+    String durationStr = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    
+    // Save to database
+    try (Connection con = DBConnect.connect();
+         PreparedStatement stmt = con.prepareStatement(
+             "INSERT INTO shifts (admin_id, admin_name, start_time, end_time, duration) " +
+             "VALUES (?, ?, ?, ?, ?)")) {
+        
+        stmt.setInt(1, loggedInUserId);
+        stmt.setString(2, currentUser.getText());
+        stmt.setTimestamp(3, Timestamp.valueOf(shiftStartTime));
+        stmt.setTimestamp(4, Timestamp.valueOf(endTime));
+        stmt.setString(5, durationStr);
+        stmt.executeUpdate();
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
 }
     
     
@@ -449,7 +529,17 @@ private void delActn(ActionEvent event) {
 
     @FXML
     private void UserLogout(ActionEvent event) {
+        endShiftTimer();
         Stage stage = (Stage) logout.getScene().getWindow();
     stage.close();
+    }
+
+    @FXML
+    private void shifts(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("shiftreports.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }

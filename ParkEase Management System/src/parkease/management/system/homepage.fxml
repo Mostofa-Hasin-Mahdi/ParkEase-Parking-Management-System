@@ -63,5 +63,16 @@
             <Font size="15.0" />
          </font>
       </Label>
+      <Label fx:id="shiftStartsLabel" layoutX="662.0" layoutY="9.0" prefHeight="24.0" prefWidth="158.0" textFill="#fff9f9">
+         <font>
+            <Font name="Calibri Bold" size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="shiftTimerLabel" layoutX="691.0" layoutY="441.0" prefHeight="24.0" prefWidth="116.0">
+         <font>
+            <Font name="Impact" size="12.0" />
+         </font>
+      </Label>
+      <Button layoutX="669.0" layoutY="306.0" mnemonicParsing="false" onAction="#shifts" prefHeight="38.0" prefWidth="158.0" stylesheets="@../../redbtn.css" text="Shift Reports" />
    </children>
 </AnchorPane>
