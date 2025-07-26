@@ -1,6 +1,7 @@
 # 🚗 ParkEase - Parking Management System
 
-![ParkEase Banner](https://via.placeholder.com/800x300?text=ParkEase+Parking+Management+System)
+![ParkEase Banner](<img width="949" height="348" alt="image" src="https://github.com/user-attachments/assets/cd51e8f7-b3a7-4594-9eaa-2f2af0f3dfd9" />
+)
 
 A modern JavaFX application for efficient parking lot management with admin controls, real-time tracking, and comprehensive reporting.
 
