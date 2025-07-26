@@ -21,7 +21,6 @@ A modern JavaFX application for efficient parking lot management with admin cont
 
 
 - Real-time admin session timer
-- Personalized welcome message
 - Vehicle management controls
 
 ### 🚘 Vehicle Management
@@ -47,7 +46,6 @@ A modern JavaFX application for efficient parking lot management with admin cont
 
   - Admin work duration tracking
   - Session start/end times
-  - Performance metrics
 
 ### 🛠️ Technical Specifications
 - **Built With**:
